@@ -59,12 +59,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 @Override
 protected void configure(HttpSecurity http) throws Exception {
 
+    http
+            .authorizeRequests().antMatchers("user/add")
+            .permitAll()
+            .and()
+            .httpBasic().disable();
+
     http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/user/add/*").permitAll()
-            .anyRequest().hasRole("USER")
-            .and().httpBasic().realmName(USER_REALM).authenticationEntryPoint(getBasicAuthEntryPoint())
-            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .antMatchers("/jewelry/*").hasRole("USER").and()
+            .httpBasic().realmName(USER_REALM).authenticationEntryPoint(getBasicAuthEntryPoint());
+
+
+
 
 
 

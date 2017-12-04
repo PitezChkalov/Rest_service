@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface JewelryService {
      List<Jewelry> getAllJewelry();
-     Jewelry getJewelryByBarCode(Long barCode);
+     Jewelry getJewelryByBarCode(String barCode);
      boolean addJewelry(Jewelry jewelry);
      void updateJewelry(Jewelry jewelry);
-     void deleteJewelry(Long barCode);
+     void deleteJewelry(String barCode);
 
 }

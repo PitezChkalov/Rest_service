@@ -11,12 +11,19 @@ import javax.persistence.Table;
 @Table(name="jewelry")
 public class Jewelry implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="good_id")
-    private int goodId;
-	@Column(name="bar_code")
-	private Long barCode;
+	@Column(name="bar_code",  unique=true,columnDefinition="VARCHAR(64)")
+	private String barCode;
+	public Jewelry() {
+	}
+	public Jewelry(String barCode, String article, String category, String description) {
+		this.barCode = barCode;
+		this.article = article;
+		this.category = category;
+		this.description = description;
+	}
+
 	@Column(name="article")
     private String article;
 	@Column(name="category")
@@ -26,19 +33,12 @@ public class Jewelry implements Serializable {
 		return serialVersionUID;
 	}
 
-	public int getGoodId() {
-		return goodId;
-	}
 
-	public void setGoodId(int goodId) {
-		this.goodId = goodId;
-	}
-
-	public Long getBarCode() {
+	public String getBarCode() {
 		return barCode;
 	}
 
-	public void setBarCode(Long barCode) {
+	public void setBarCode(String barCode) {
 		this.barCode = barCode;
 	}
 

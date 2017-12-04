@@ -14,17 +14,19 @@ public class JewelryDAOImpl implements JewelryDAO {
 	@PersistenceContext	
 	private EntityManager entityManager;	
 	@Override
-	public Jewelry getJewelryByBarCode(Long barCode) {
+	public Jewelry getJewelryByBarCode(String barCode) {
+
 		return entityManager.find(Jewelry.class, barCode);
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Jewelry> getAllJewelry() {
-		String hql = "FROM Jewelry as atcl ORDER BY atcl.jewelryId";
+		String hql = "FROM Jewelry as atcl ORDER BY atcl.barCode";
 		return (List<Jewelry>) entityManager.createQuery(hql).getResultList();
 	}	
 	@Override
 	public void addJewelry(Jewelry jewelry) {
+
 		entityManager.persist(jewelry);
 	}
 	@Override
@@ -37,11 +39,11 @@ public class JewelryDAOImpl implements JewelryDAO {
 		entityManager.flush();
 	}
 	@Override
-	public void deleteJewelry(Long barCode) {
+	public void deleteJewelry(String barCode) {
 		entityManager.remove(getJewelryByBarCode(barCode));
 	}
 	@Override
-	public boolean jewelryExists(Long barCode) {
+	public boolean jewelryExists(String barCode) {
 		String hql = "FROM Jewelry as atcl WHERE atcl.barCode = ?";
 		int count = entityManager.createQuery(hql).setParameter(1,barCode)
 				.getResultList().size();

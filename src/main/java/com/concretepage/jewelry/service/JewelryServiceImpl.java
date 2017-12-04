@@ -12,7 +12,7 @@ public class JewelryServiceImpl implements JewelryService {
 	@Autowired
 	private JewelryDAO jewelryDAO;
 	@Override
-	public Jewelry getJewelryByBarCode(Long barCode) {
+	public Jewelry getJewelryByBarCode(String barCode) {
 		Jewelry obj = jewelryDAO.getJewelryByBarCode(barCode);
 		return obj;
 	}	
@@ -34,7 +34,7 @@ public class JewelryServiceImpl implements JewelryService {
 		jewelryDAO.updateJewelry(jewelry);
 	}
 	@Override
-	public void deleteJewelry(Long barCode) {
+	public void deleteJewelry(String barCode) {
 		jewelryDAO.deleteJewelry(barCode);
 	}
 

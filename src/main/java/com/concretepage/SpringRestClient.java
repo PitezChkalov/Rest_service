@@ -1,7 +1,9 @@
 package com.concretepage;
 
 import java.util.Arrays;
+import java.util.List;
 
+import com.concretepage.jewelry.entity.Jewelry;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,14 +16,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import com.concretepage.auth.entity.User;
 public class SpringRestClient {
-    public static final String REST_SERVICE_URI = "http://localhost:8080/user";
+    public static final String REST_SERVICE_URI = "http://localhost:8080/jewelry";
 
     /*
      * Add HTTP Authorization header, using Basic-Authentication to send user-credentials.
      */
 
     private static HttpHeaders getHeaders(){
-        String plainCredentials="q:q";
+        String plainCredentials="qwerty:qwerty";
         String base64Credentials = new String(Base64.encodeBase64(plainCredentials.getBytes()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -72,14 +74,69 @@ try{
     }
     }
 
-    /*private static void getUser(){
+    /*
+     * Send a GET request to get list of all users.
+   to create a new user.
+     */
+
+
+    private static void getUser(){
         System.out.println("\nTesting getUser API----------");
         RestTemplate restTemplate = getRestTemplate();
+
         HttpEntity<String> request = new HttpEntity<String>(getHeaders());
         ResponseEntity<User> response = restTemplate.exchange(REST_SERVICE_URI+"/user/q", HttpMethod.GET, request, User.class);
         User user = response.getBody();
         System.out.println(user);
-    }*/
+    }
+
+    private static void createGood() {
+
+        try{
+
+            RestTemplate restTemplate = getRestTemplate();
+            System.out.println("\nTesting create User API----------");
+
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            Object jewelry = new Jewelry("7350037006694","с234ут","серьги","серебро 925");
+
+            HttpEntity<Object> request = new HttpEntity<Object>(jewelry, getHeaders());
+
+            ResponseEntity<String> response = restTemplate.exchange(REST_SERVICE_URI+"/add", HttpMethod.POST, request, String.class);
+            String result = response.getBody();
+            System.out.println(result);}
+
+        catch (HttpClientErrorException e) {
+            System.out.println(e.getStatusCode());
+            System.out.println(e.getResponseBodyAsString());
+        }
+    }
+
+
+    private static void getGood(){
+
+        System.out.println("\nTesting getUser API----------");
+        RestTemplate restTemplate = getRestTemplate();
+        String barcode = "7350037006694";
+        HttpEntity<String> request = new HttpEntity<String>(getHeaders());
+        ResponseEntity<Jewelry> response = restTemplate.exchange(REST_SERVICE_URI+"/get/"+barcode, HttpMethod.GET, request, Jewelry.class);
+        Jewelry jewelry = response.getBody();
+        System.out.println(response);
+    }
+
+    private static void getAllGoods(){
+
+        HttpHeaders headers = getHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        RestTemplate restTemplate = getRestTemplate();
+        String url = "http://localhost:8080/jewelry/getall";
+        HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
+        ResponseEntity<Jewelry[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Jewelry[].class);
+        Jewelry[] jewelries = responseEntity.getBody();
+        for(Jewelry jewelry : jewelries) {
+            System.out.println("Щтрих код: "+jewelry.getBarCode()+", Артикль: "+jewelry.getArticle()
+                    +", Категория: "+jewelry.getCategory());}
+    }
 
 
 
@@ -90,9 +147,7 @@ try{
 
 
     public static void main(String args[]){
-
-
-createUser();
-   }
+        getAllGoods();
+    }
 
 }
